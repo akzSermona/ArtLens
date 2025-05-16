@@ -1,3 +1,4 @@
+import 'package:artlens/main.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 
@@ -28,9 +29,13 @@ class ScanScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text(
+            Text(
               'Seleziona il metodo con cui vuoi scannerizzare:',
-              style: TextStyle(fontFamily: 'Limelight', fontSize: 17),
+              style: TextStyle(
+                fontFamily: 'RobotoCondensed',
+                fontSize: 17,
+                color: customColorScheme.primary,
+              ),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 20),
