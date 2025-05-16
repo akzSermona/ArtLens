@@ -3,8 +3,9 @@ import 'package:artlens/screens/home_screen.dart';
 
 final customColorScheme = ColorScheme.fromSeed(
   brightness: Brightness.light,
-  seedColor: Color(0xFF84A98C),
-  primary: Color(0xFF84A98C),
+  seedColor: Color.fromARGB(255, 255, 255, 255),
+  primary: Color(0xFF354F52),
+  onPrimary: Color(0xFFCAD2C5),
   surface: Color(0xFFCAD2C5),
 );
 
@@ -12,7 +13,18 @@ void main() {
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(colorScheme: customColorScheme),
+      theme: ThemeData(
+        colorScheme: customColorScheme,
+        appBarTheme: AppBarTheme(
+          backgroundColor: customColorScheme.primary,
+          titleTextStyle: TextStyle(
+            fontFamily: 'Limelight',
+            fontSize: 20,
+            color: customColorScheme.onPrimary,
+          ),
+          iconTheme: IconThemeData(color: customColorScheme.onPrimary),
+        ),
+      ),
       home: const HomeScreen(),
     ),
   );
