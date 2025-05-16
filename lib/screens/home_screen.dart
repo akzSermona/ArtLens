@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:artlens/screens/history_screen.dart';
+import 'package:artlens/screens/saved_screen.dart';
+import 'package:artlens/screens/scan_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -10,21 +13,35 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-    Widget _buildSideButton(IconData icon) {
+    Widget buildSideButton(
+      BuildContext context,
+      IconData icon,
+      Widget destinationPage,
+    ) {
       return ElevatedButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => destinationPage),
+          );
+        },
         style: ElevatedButton.styleFrom(
           shape: const CircleBorder(),
           padding: const EdgeInsets.all(30),
-          backgroundColor: Color.fromRGBO(82, 121, 111, 1),
+          backgroundColor: const Color.fromRGBO(82, 121, 111, 1),
         ),
         child: Icon(icon, size: 24),
       );
     }
 
-    Widget _buildCenterButton(IconData icon) {
+    Widget buildCenterButton(IconData icon) {
       return ElevatedButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const ScanScreen()),
+          );
+        },
         style: ElevatedButton.styleFrom(
           shape: const CircleBorder(),
           padding: const EdgeInsets.all(40),
@@ -39,14 +56,22 @@ class _HomeScreenState extends State<HomeScreen> {
       children: [
         Transform.translate(
           offset: const Offset(0, 40),
-          child: _buildCenterButton(Icons.camera_alt),
+          child: buildCenterButton(Icons.camera_alt_outlined),
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            _buildSideButton(Icons.history),
+            buildSideButton(
+              context,
+              Icons.history_outlined,
+              const HistoryScreen(),
+            ),
             const SizedBox(width: 45),
-            _buildSideButton(Icons.bookmark),
+            buildSideButton(
+              context,
+              Icons.bookmark_outlined,
+              const SavedScreen(),
+            ),
           ],
         ),
       ],
@@ -55,12 +80,9 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Ogni opera ha una storia: scopriamola insieme.',
-          style: TextStyle(
-            fontSize: 17,
-            fontWeight: FontWeight.bold,
-            fontStyle: FontStyle.italic,
-          ),
+          'Ogni opera ha una storia:\nscopriamola insieme!',
+          style: TextStyle(fontFamily: 'Limelight', fontSize: 18),
+          textAlign: TextAlign.center,
         ),
         centerTitle: true,
       ),
