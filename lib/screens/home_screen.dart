@@ -1,3 +1,4 @@
+import 'package:artlens/main.dart';
 import 'package:flutter/material.dart';
 import 'package:artlens/screens/history_screen.dart';
 import 'package:artlens/screens/saved_screen.dart';
@@ -28,9 +29,9 @@ class _HomeScreenState extends State<HomeScreen> {
         style: ElevatedButton.styleFrom(
           shape: const CircleBorder(),
           padding: const EdgeInsets.all(30),
-          backgroundColor: const Color.fromRGBO(82, 121, 111, 1),
+          backgroundColor: customColorScheme.primary,
         ),
-        child: Icon(icon, size: 24),
+        child: Icon(icon, size: 24, color: customColorScheme.onPrimary),
       );
     }
 
@@ -45,9 +46,9 @@ class _HomeScreenState extends State<HomeScreen> {
         style: ElevatedButton.styleFrom(
           shape: const CircleBorder(),
           padding: const EdgeInsets.all(40),
-          backgroundColor: Color.fromRGBO(82, 121, 111, 1),
+          backgroundColor: customColorScheme.primary,
         ),
-        child: Icon(icon, size: 30),
+        child: Icon(icon, size: 30, color: customColorScheme.onPrimary),
       );
     }
 
@@ -80,13 +81,28 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Ogni opera ha una storia:\nscopriamola insieme!',
-          style: TextStyle(fontFamily: 'Limelight', fontSize: 18),
+          'ArtLens',
+          style: TextStyle(fontFamily: 'Limelight', fontSize: 25),
           textAlign: TextAlign.center,
         ),
         centerTitle: true,
       ),
-      body: Column(children: [Expanded(child: mainContent)]),
+      body: Column(
+        children: [
+          SizedBox(height: 20),
+          Text(
+            'Ogni opera ha una storia: SCOPRIAMOLA INSIEME!',
+            style: TextStyle(
+              fontFamily: 'RobotoCondensed',
+              fontSize: 17,
+              color: customColorScheme.primary,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(height: 320),
+          Expanded(child: mainContent),
+        ],
+      ),
     );
   }
 }

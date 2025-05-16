@@ -1,20 +1,35 @@
 import 'dart:io';
+import 'package:artlens/main.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-class ImageInput extends StatelessWidget {
-  final void Function(File) onImageSelected;
-
+class ImageInput extends StatefulWidget {
   const ImageInput({super.key, required this.onImageSelected});
 
-  Future<void> _selectImage(BuildContext context, ImageSource source) async {
-    final picker = ImagePicker();
-    final pickedImage = await picker.pickImage(source: source, maxWidth: 600);
+  final void Function(File image) onImageSelected;
 
-    if (pickedImage == null) return;
+  @override
+  State<ImageInput> createState() => _ImageInputState();
+}
 
-    final imageFile = File(pickedImage.path);
-    onImageSelected(imageFile);
+class _ImageInputState extends State<ImageInput> {
+  File? _selectedImage;
+
+  void _selectImage(ImageSource source) async {
+    final imagePicker = ImagePicker();
+    final pickedImage = await imagePicker.pickImage(
+      source: source,
+      maxWidth: 600,
+    );
+
+    if (pickedImage == null) {
+      return;
+    }
+
+    setState(() {
+      _selectedImage = File(pickedImage.path);
+    });
+    widget.onImageSelected(_selectedImage!);
   }
 
   @override
@@ -24,11 +39,19 @@ class ImageInput extends StatelessWidget {
         SizedBox(
           width: 300,
           child: ElevatedButton.icon(
-            onPressed: () => _selectImage(context, ImageSource.camera),
+            onPressed: () => _selectImage(ImageSource.camera),
             icon: const Icon(Icons.camera_alt),
-            label: const Text('Scatta una foto'),
+            label: Text(
+              'Scatta una foto',
+              style: TextStyle(
+                fontFamily: 'RobotoCondensed',
+                color: customColorScheme.onPrimary,
+              ),
+            ),
             style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 20),
+              backgroundColor: customColorScheme.primary,
+              iconColor: customColorScheme.onPrimary,
             ),
           ),
         ),
@@ -36,11 +59,19 @@ class ImageInput extends StatelessWidget {
         SizedBox(
           width: 300,
           child: ElevatedButton.icon(
-            onPressed: () => _selectImage(context, ImageSource.gallery),
+            onPressed: () => _selectImage(ImageSource.gallery),
             icon: const Icon(Icons.photo_library),
-            label: const Text('Scegli dalla galleria'),
+            label: Text(
+              'Scegli dalla galleria',
+              style: TextStyle(
+                fontFamily: 'RobotoCondensed',
+                color: customColorScheme.onPrimary,
+              ),
+            ),
             style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 20),
+              backgroundColor: customColorScheme.primary,
+              iconColor: customColorScheme.onPrimary,
             ),
           ),
         ),
