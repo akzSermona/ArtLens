@@ -1,3 +1,4 @@
+import 'package:artlens/db/artwork_db.dart';
 import 'package:flutter/material.dart';
 import 'package:artlens/screens/home_screen.dart';
 
@@ -9,7 +10,10 @@ final customColorScheme = ColorScheme.fromSeed(
   surface: Color(0xFFCAD2C5),
 );
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await ArtworkDb.instance.database;
+
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
