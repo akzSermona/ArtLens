@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:artlens/models/artwork.dart';
@@ -122,7 +121,7 @@ class ArtworkDb {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query(
       'artworks',
-      orderBy: 'timestamp DESC', // Mostra le scansioni più recenti prima
+      orderBy: 'timestamp DESC',
     );
     return maps.map((map) => Artwork.fromMap(map)).toList();
   }
@@ -132,6 +131,16 @@ class ArtworkDb {
     await db.update(
       'artworks',
       {'isFavorite': 1},
+      where: 'id = ?',
+      whereArgs: [artworkId],
+    );
+  }
+
+  Future<void> removeFromFavorites(String artworkId) async {
+    final db = await database;
+    await db.update(
+      'artworks',
+      {'isFavorite': 0},
       where: 'id = ?',
       whereArgs: [artworkId],
     );
