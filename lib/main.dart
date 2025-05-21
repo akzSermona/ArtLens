@@ -1,21 +1,28 @@
-import 'package:artlens/db/artwork_db.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart'; // ⬅️ Importa Riverpod
+import 'package:artlens/db/artwork_db.dart';
 import 'package:artlens/screens/home_screen.dart';
 
 final customColorScheme = ColorScheme.fromSeed(
   brightness: Brightness.light,
-  seedColor: Color.fromARGB(255, 255, 255, 255),
-  primary: Color(0xFF354F52),
-  onPrimary: Color(0xFFCAD2C5),
-  surface: Color(0xFFCAD2C5),
+  seedColor: const Color.fromARGB(255, 255, 255, 255),
+  primary: const Color(0xFF354F52),
+  onPrimary: const Color(0xFFCAD2C5),
+  surface: const Color(0xFFCAD2C5),
 );
 
-void main() async {
+Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await ArtworkDb.instance.database;
+  runApp(const ProviderScope(child: ArtlensApp()));
+}
 
-  runApp(
-    MaterialApp(
+class ArtlensApp extends StatelessWidget {
+  const ArtlensApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: customColorScheme,
@@ -30,6 +37,6 @@ void main() async {
         ),
       ),
       home: const HomeScreen(),
-    ),
-  );
+    );
+  }
 }
