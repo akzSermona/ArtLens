@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:artlens/db/artwork_db.dart';
 import 'package:artlens/models/artwork.dart';
 import 'package:artlens/widgets/artwork_list/artwork_list.dart';
-import 'dart:io';
 
 class HistoryScreen extends StatefulWidget {
   const HistoryScreen({super.key});
@@ -15,7 +14,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
   bool _isSearching = false;
   String _searchQuery = '';
   List<Artwork> _searchResults = [];
-  List<Artwork> _allArtworks = []; // aggiungi questa riga
+  List<Artwork> _allArtworks = [];
   bool _hasSearched = false;
 
   final TextEditingController _searchController = TextEditingController();
@@ -23,7 +22,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
   @override
   void initState() {
     super.initState();
-    _loadAllArtworks(); // carica tutte le opere all'avvio
+    _loadAllArtworks();
   }
 
   Future<void> _loadAllArtworks() async {

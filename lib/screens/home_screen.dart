@@ -1,9 +1,14 @@
 import 'package:artlens/main.dart';
+import 'package:artlens/models/artwork.dart';
 import 'package:flutter/material.dart';
 import 'package:artlens/screens/history_screen.dart';
 import 'package:artlens/screens/saved_screen.dart';
 import 'package:artlens/screens/scan_screen.dart';
+import 'package:artlens/db/artwork_db.dart';
+import 'package:artlens/widgets/artwork_list/artwork_item.dart';
 
+//TODO non far uscire arrowback quando si è nella home
+// adattare la home ai vari dispositivi
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -12,6 +17,41 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  List<Artwork> _latestArtworks = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadLatestArtworks();
+  }
+
+  Future<void> _loadLatestArtworks() async {
+    final artworks = await ArtworkDb.instance.getAllArtworks();
+    setState(() {
+      _latestArtworks = artworks.take(1).toList();
+    });
+  }
+
+  Widget buildLatestArtworksCards() {
+    if (_latestArtworks.isEmpty) {
+      return const SizedBox();
+    }
+    return Column(
+      children:
+          _latestArtworks
+              .map(
+                (artwork) => Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 5.0,
+                    horizontal: 5.0,
+                  ),
+                  child: ArtworkItem(artwork),
+                ),
+              )
+              .toList(),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     Widget buildSideButton(
@@ -56,7 +96,7 @@ class _HomeScreenState extends State<HomeScreen> {
       mainAxisSize: MainAxisSize.min,
       children: [
         Transform.translate(
-          offset: const Offset(0, 40),
+          offset: const Offset(0, 50),
           child: buildCenterButton(Icons.camera_alt_outlined),
         ),
         Row(
@@ -67,7 +107,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Icons.history_outlined,
               const HistoryScreen(),
             ),
-            const SizedBox(width: 45),
+            const SizedBox(width: 40),
             buildSideButton(
               context,
               Icons.bookmark_outlined,
@@ -80,6 +120,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: const Text(
           'ArtLens',
           style: TextStyle(fontFamily: 'Limelight', fontSize: 25),
@@ -89,9 +130,9 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: Column(
         children: [
-          SizedBox(height: 20),
+          const SizedBox(height: 15),
           Text(
-            'Ogni opera ha una storia: SCOPRIAMOLA INSIEME!',
+            'Le tue ultime opere scansionate:',
             style: TextStyle(
               fontFamily: 'RobotoCondensed',
               fontSize: 17,
@@ -99,8 +140,8 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             textAlign: TextAlign.center,
           ),
-          SizedBox(height: 320),
-          Expanded(child: mainContent),
+          buildLatestArtworksCards(),
+          mainContent,
         ],
       ),
     );
