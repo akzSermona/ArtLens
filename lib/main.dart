@@ -12,6 +12,9 @@ final customColorScheme = ColorScheme.fromSeed(
   surface: const Color(0xFFCAD2C5),
 );
 
+final RouteObserver<ModalRoute<void>> routeObserver =
+    RouteObserver<ModalRoute<void>>();
+
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await ArtworkDb.instance.database;
@@ -29,6 +32,7 @@ class ArtlensApp extends StatelessWidget {
     builder:
         (context, child) => MaterialApp(
           debugShowCheckedModeBanner: false,
+          navigatorObservers: [routeObserver],
           theme: ThemeData(
             colorScheme: customColorScheme,
             appBarTheme: AppBarTheme(
