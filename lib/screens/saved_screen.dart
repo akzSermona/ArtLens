@@ -2,6 +2,7 @@ import 'package:artlens/widgets/artwork_list/artwork_list.dart';
 import 'package:flutter/material.dart';
 import 'package:artlens/db/artwork_db.dart';
 import 'package:artlens/models/artwork.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SavedScreen extends StatefulWidget {
   const SavedScreen({super.key});
@@ -64,9 +65,9 @@ class _SavedScreenState extends State<SavedScreen> {
                     _performSearch(query);
                   },
                 )
-                : const Text(
+                : Text(
                   'Le tue scansioni salvate',
-                  style: TextStyle(fontFamily: 'Limelight', fontSize: 18),
+                  style: TextStyle(fontFamily: 'Limelight', fontSize: 18.r),
                 ),
         centerTitle: true,
         leading: IconButton(
