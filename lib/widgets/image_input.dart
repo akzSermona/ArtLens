@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:artlens/main.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ImageInput extends StatefulWidget {
@@ -46,6 +47,7 @@ class _ImageInputState extends State<ImageInput> {
               style: TextStyle(
                 fontFamily: 'RobotoCondensed',
                 color: customColorScheme.onPrimary,
+                fontSize: 16.r,
               ),
             ),
             style: ElevatedButton.styleFrom(
@@ -66,6 +68,7 @@ class _ImageInputState extends State<ImageInput> {
               style: TextStyle(
                 fontFamily: 'RobotoCondensed',
                 color: customColorScheme.onPrimary,
+                fontSize: 16.r,
               ),
             ),
             style: ElevatedButton.styleFrom(

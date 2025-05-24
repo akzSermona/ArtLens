@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:artlens/db/artwork_db.dart';
 import 'package:artlens/models/artwork.dart';
 import 'package:artlens/widgets/artwork_list/artwork_list.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class HistoryScreen extends StatefulWidget {
   const HistoryScreen({super.key});
@@ -12,7 +13,6 @@ class HistoryScreen extends StatefulWidget {
 
 class _HistoryScreenState extends State<HistoryScreen> {
   bool _isSearching = false;
-  String _searchQuery = '';
   List<Artwork> _searchResults = [];
   List<Artwork> _allArtworks = [];
   bool _hasSearched = false;
@@ -23,6 +23,12 @@ class _HistoryScreenState extends State<HistoryScreen> {
   void initState() {
     super.initState();
     _loadAllArtworks();
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
   }
 
   Future<void> _loadAllArtworks() async {
@@ -57,13 +63,12 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     border: InputBorder.none,
                   ),
                   onSubmitted: (query) {
-                    _searchQuery = query;
                     _performSearch(query);
                   },
                 )
-                : const Text(
+                : Text(
                   'Storia delle tue scansioni',
-                  style: TextStyle(fontFamily: 'Limelight', fontSize: 18),
+                  style: TextStyle(fontFamily: 'Limelight', fontSize: 18.r),
                 ),
         centerTitle: true,
         leading: IconButton(

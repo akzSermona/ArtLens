@@ -1,10 +1,12 @@
 import 'dart:io';
 import 'package:artlens/main.dart';
+import 'package:artlens/screens/detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:artlens/models/artwork.dart';
 import 'package:artlens/providers/user_favorites_provider.dart';
 import 'package:artlens/db/artwork_db.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ArtworkItem extends ConsumerStatefulWidget {
   const ArtworkItem(this.artwork, {super.key});
@@ -24,91 +26,89 @@ class _ArtworkItemState extends ConsumerState<ArtworkItem> {
     return Card(
       color: customColorScheme.primary,
       elevation: 10,
-      margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      child: Stack(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: customColorScheme.primary,
-                      width: 5,
-                    ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  clipBehavior: Clip.antiAlias,
-                  child:
-                      widget.artwork.imagePath.isNotEmpty
-                          ? Image.file(
-                            File(widget.artwork.imagePath),
-                            height: 150,
-                            width: double.infinity,
-                            fit: BoxFit.cover,
-                            alignment: Alignment.center,
-                          )
-                          : const SizedBox(
-                            height: double.infinity,
-                            width: double.infinity,
-                            child: Icon(
-                              Icons.image,
-                              size: 60,
-                              color: Colors.grey,
-                            ),
-                          ),
-                ),
-                const SizedBox(height: 12),
-                Text(
-                  widget.artwork.title,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                    color: Color(0xFFCAD2C5),
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                Text(
-                  widget.artwork.artist,
-                  style: const TextStyle(
-                    fontSize: 15,
-                    color: Color(0xFFCAD2C5),
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ],
+      margin: EdgeInsets.symmetric(vertical: 15.r, horizontal: 15.r),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.r)),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(16),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => DetailScreen(artworkId: widget.artwork.id),
             ),
-          ),
-
-          Positioned(
-            bottom: 8,
-            right: 8,
-            child: IconButton(
-              icon: Icon(
-                isFavorite ? Icons.bookmark : Icons.bookmark_add_outlined,
-                color: Colors.yellow,
-                size: 28,
+          );
+        },
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            ClipRRect(
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(16),
               ),
-              onPressed: () async {
-                final notifier = ref.read(favoritesProvider.notifier);
-
-                if (isFavorite) {
-                  notifier.removeFromFavorites(widget.artwork);
-                  await ArtworkDb.instance.removeFromFavorites(
-                    widget.artwork.id,
-                  );
-                } else {
-                  notifier.addToFavorites(widget.artwork);
-                  await ArtworkDb.instance.addToFavorites(widget.artwork.id);
-                }
-                setState(() {});
-              },
+              child:
+                  widget.artwork.imagePath.isNotEmpty
+                      ? Image.file(
+                        File(widget.artwork.imagePath),
+                        height: 150.r,
+                        width: double.infinity.r,
+                        fit: BoxFit.cover,
+                      )
+                      : Container(
+                        height: 150.r,
+                        color: Colors.grey[200],
+                        child: const Icon(
+                          Icons.image,
+                          size: 60,
+                          color: Colors.grey,
+                        ),
+                      ),
             ),
-          ),
-        ],
+            ListTile(
+              title: Text(
+                widget.artwork.title,
+                style: TextStyle(
+                  fontSize: 20.r,
+                  fontWeight: FontWeight.bold,
+                  color: const Color(0xFFCAD2C5),
+                ),
+                textAlign: TextAlign.center,
+              ),
+              subtitle: Text(
+                widget.artwork.artist,
+                style: TextStyle(
+                  fontSize: 17.r,
+                  color: const Color(0xFFCAD2C5),
+                ),
+                textAlign: TextAlign.center,
+              ),
+              trailing: IconButton(
+                icon: Icon(
+                  isFavorite ? Icons.bookmark : Icons.bookmark_add_outlined,
+                  color: const Color(0xFFCAD2C5),
+                  size: 28,
+                ),
+                onPressed: () async {
+                  final notifier = ref.read(favoritesProvider.notifier);
+
+                  if (isFavorite) {
+                    notifier.removeFromFavorites(widget.artwork);
+                    await ArtworkDb.instance.removeFromFavorites(
+                      widget.artwork.id,
+                    );
+                  } else {
+                    notifier.addToFavorites(widget.artwork);
+                    await ArtworkDb.instance.addToFavorites(widget.artwork.id);
+                  }
+                  setState(() {});
+                },
+                tooltip:
+                    isFavorite
+                        ? 'Rimuovi dai preferiti'
+                        : 'Aggiungi ai preferiti',
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
