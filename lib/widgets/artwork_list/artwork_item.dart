@@ -9,9 +9,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ArtworkItem extends ConsumerStatefulWidget {
-  const ArtworkItem(this.artwork, {super.key});
+  const ArtworkItem(this.artwork, {super.key, this.margin});
 
   final Artwork artwork;
+  final EdgeInsetsGeometry? margin;
 
   @override
   ConsumerState<ArtworkItem> createState() => _ArtworkItemState();
@@ -25,11 +26,12 @@ class _ArtworkItemState extends ConsumerState<ArtworkItem> {
 
     return Card(
       color: customColorScheme.primary,
-      elevation: 10,
-      margin: EdgeInsets.symmetric(vertical: 15.r, horizontal: 15.r),
+      margin:
+          widget.margin ??
+          EdgeInsets.symmetric(vertical: 15.r, horizontal: 15.r),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.r)),
       child: InkWell(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(16.r),
         onTap: () {
           Navigator.push(
             context,
