@@ -145,4 +145,27 @@ class ArtworkDb {
       whereArgs: [artworkId],
     );
   }
+
+  Future<List<Artwork>> getFavorites() async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query(
+      'artworks',
+      where: 'isFavorite = 1',
+    );
+    return maps.map((map) => Artwork.fromMap(map)).toList();
+  }
+
+  Future<Artwork> getArtworkById(String id) async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query(
+      'artworks',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+    if (maps.isNotEmpty) {
+      return Artwork.fromMap(maps.first);
+    } else {
+      throw Exception('Artwork not found');
+    }
+  }
 }
