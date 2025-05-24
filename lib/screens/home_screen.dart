@@ -16,7 +16,7 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with RouteAware {
   List<Artwork> _latestArtworks = [];
 
   @override
@@ -25,11 +25,28 @@ class _HomeScreenState extends State<HomeScreen> {
     _loadLatestArtworks();
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context)!);
+  }
+
+  @override
+  void didPopNext() {
+    _loadLatestArtworks();
+  }
+
   Future<void> _loadLatestArtworks() async {
     final artworks = await ArtworkDb.instance.getAllArtworks();
     setState(() {
-      _latestArtworks = artworks.take(1).toList();
+      _latestArtworks = artworks.take(4).toList();
     });
+  }
+
+  @override
+  void dispose() {
+    routeObserver.unsubscribe(this);
+    super.dispose();
   }
 
   Widget buildButton() {
@@ -82,39 +99,36 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         centerTitle: true,
       ),
-      body: Column(
-        children: [
-          Text(
-            'Ogni opera ha una sua storia: SCOPRIAMOLA INSIEME!',
-            style: TextStyle(
-              fontFamily: 'RobotoCondensed',
-              fontSize: 15.r,
-              color: customColorScheme.primary,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          Expanded(
-            child: Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    'Le tue ultime opere scansionate:',
-                    style: TextStyle(
-                      fontFamily: 'RobotoCondensed',
-                      fontSize: 17.r,
-                      color: customColorScheme.primary,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: 10.h),
-                  LatestArtworkCards(artworks: _latestArtworks),
-                  buildButton(),
-                ],
+      body: Expanded(
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'Ogni opera ha una sua storia: SCOPRIAMOLA INSIEME!',
+                style: TextStyle(
+                  fontFamily: 'RobotoCondensed',
+                  fontSize: 15.r,
+                  color: customColorScheme.primary,
+                ),
+                textAlign: TextAlign.center,
               ),
-            ),
+              SizedBox(height: 20.h),
+              Text(
+                'Le tue ultime opere scansionate:',
+                style: TextStyle(
+                  fontFamily: 'RobotoCondensed',
+                  fontSize: 17.r,
+                  color: customColorScheme.primary,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: 10.h),
+              LatestArtworkCards(artworks: _latestArtworks),
+              buildButton(),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
