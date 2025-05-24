@@ -5,10 +5,10 @@ import 'package:artlens/screens/history_screen.dart';
 import 'package:artlens/screens/saved_screen.dart';
 import 'package:artlens/screens/scan_screen.dart';
 import 'package:artlens/db/artwork_db.dart';
-import 'package:artlens/widgets/artwork_list/artwork_item.dart';
+import 'package:artlens/widgets/home/latest_artwork.dart';
+import 'package:artlens/widgets/home/home_button.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-//TODO non far uscire arrowback quando si è nella home
-// adattare la home ai vari dispositivi
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -32,116 +32,88 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  Widget buildLatestArtworksCards() {
-    if (_latestArtworks.isEmpty) {
-      return const SizedBox();
-    }
+  Widget buildButton() {
     return Column(
-      children:
-          _latestArtworks
-              .map(
-                (artwork) => Padding(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 5.0,
-                    horizontal: 5.0,
-                  ),
-                  child: ArtworkItem(artwork),
-                ),
-              )
-              .toList(),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    Widget buildSideButton(
-      BuildContext context,
-      IconData icon,
-      Widget destinationPage,
-    ) {
-      return ElevatedButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => destinationPage),
-          );
-        },
-        style: ElevatedButton.styleFrom(
-          shape: const CircleBorder(),
-          padding: const EdgeInsets.all(30),
-          backgroundColor: customColorScheme.primary,
-        ),
-        child: Icon(icon, size: 24, color: customColorScheme.onPrimary),
-      );
-    }
-
-    Widget buildCenterButton(IconData icon) {
-      return ElevatedButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const ScanScreen()),
-          );
-        },
-        style: ElevatedButton.styleFrom(
-          shape: const CircleBorder(),
-          padding: const EdgeInsets.all(40),
-          backgroundColor: customColorScheme.primary,
-        ),
-        child: Icon(icon, size: 30, color: customColorScheme.onPrimary),
-      );
-    }
-
-    Widget mainContent = Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         Transform.translate(
           offset: const Offset(0, 50),
-          child: buildCenterButton(Icons.camera_alt_outlined),
+          child: HomeCircleButton(
+            context: context,
+            icon: Icons.camera_alt_outlined,
+            destinationPage: const ScanScreen(),
+            padding: 40,
+            iconSize: 30,
+          ),
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            buildSideButton(
-              context,
-              Icons.history_outlined,
-              const HistoryScreen(),
+            HomeCircleButton(
+              context: context,
+              icon: Icons.history_outlined,
+              destinationPage: const HistoryScreen(),
+              padding: 30,
+              iconSize: 24,
             ),
             const SizedBox(width: 40),
-            buildSideButton(
-              context,
-              Icons.bookmark_outlined,
-              const SavedScreen(),
+            HomeCircleButton(
+              context: context,
+              icon: Icons.bookmark_outlined,
+              destinationPage: const SavedScreen(),
+              padding: 30,
+              iconSize: 24,
             ),
           ],
         ),
       ],
     );
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: const Text(
+        title: Text(
           'ArtLens',
-          style: TextStyle(fontFamily: 'Limelight', fontSize: 25),
+          style: TextStyle(fontFamily: 'Limelight', fontSize: 25.r),
           textAlign: TextAlign.center,
         ),
         centerTitle: true,
       ),
       body: Column(
         children: [
-          const SizedBox(height: 15),
           Text(
-            'Le tue ultime opere scansionate:',
+            'Ogni opera ha una sua storia: SCOPRIAMOLA INSIEME!',
             style: TextStyle(
               fontFamily: 'RobotoCondensed',
-              fontSize: 17,
+              fontSize: 15.r,
               color: customColorScheme.primary,
             ),
             textAlign: TextAlign.center,
           ),
-          buildLatestArtworksCards(),
-          mainContent,
+          Expanded(
+            child: Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'Le tue ultime opere scansionate:',
+                    style: TextStyle(
+                      fontFamily: 'RobotoCondensed',
+                      fontSize: 17.r,
+                      color: customColorScheme.primary,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 10.h),
+                  LatestArtworkCards(artworks: _latestArtworks),
+                  buildButton(),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );
